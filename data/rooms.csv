@@ -1,0 +1,5 @@
+id,building_id,number,type,capacity,has_projector
+1,1,101,lecture,120,True
+2,1,205,seminar,30,True
+3,2,310,lab,25,False
+4,1,400,lecture,200,True
