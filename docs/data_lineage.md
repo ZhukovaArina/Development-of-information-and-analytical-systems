@@ -2,10 +2,11 @@
 
 ## Происхождение данных
 
-[LMS API] --> [Raw S3: students, courses, grades] --> [Bronze] --> [Silver] --> [Gold: student_features]
-[CSV] --> [Raw S3: schedule, rooms, teachers] --> [Bronze] --> [Silver]
-[Kafka Events] --> [ClickHouse: people_count] (агрегация 5-мин окон)
+LMS API → Raw S3 (students, courses, grades) → Bronze → Silver → Gold (student_features)
 
+CSV → Raw S3 (schedule, rooms, teachers) → Bronze → Silver
+
+Kafka Events → ClickHouse (people_count) — агрегация 5-мин окон
 
 ## Зависимости между датасетами
 
@@ -21,19 +22,9 @@
 ## Сквозная трассировка
 
 Событие: student.entered.classroom
-  --> Kafka topic: uni_events
-  --> Aggregator (Python, 5-мин окна)
-  --> ClickHouse: uni.people_count
-  --> Cube.js: PeopleCount.total_people
-  --> Streamlit: график загрузки кампуса
+
+  Kafka → Aggregator (5-мин окна) → ClickHouse → Cube.js → Streamlit
 
 Оценка студента:
-  --> LMS API: /grades
-  --> Airflow DAG: etl_to_raw_layer
-  --> Raw S3: api/grades/*.parquet
-  --> Bronze S3: grades/*.parquet
-  --> Silver S3: grades/*.parquet (очищенные)
-  --> Gold S3: student_features/student_features.parquet
-  --> ClickHouse: uni.student_features
-  --> Cube.js: StudentFeatures.avg_score
-  --> Streamlit: график успеваемости
+
+LMS API → Airflow DAG → Raw S3 → Bronze S3 → Silver S3 → Gold S3 → ClickHouse → Cube.js → Streamlit
