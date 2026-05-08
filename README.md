@@ -2,19 +2,24 @@
 
 ## Архитектура
 
-[Сырые данные] → [S3 Raw] → [S3 Bronze] → [S3 Silver] → [S3 Gold] → [ClickHouse] → [Cube.js] → [Streamlit]
-                            ↑                                    ↑
-[API LMS / CSV] ───────────┘                                    |
-[Kafka Events] ──→ [ClickHouse (real-time)] ────────────────────┘
-
+[Сырые данные] --> [S3 Raw] --> [S3 Bronze] --> [S3 Silver] --> [S3 Gold] --> [ClickHouse] --> [Cube.js] --> [Streamlit]
+                        ^                                    ^
+[API LMS / CSV] --------┘                                    |
+[Kafka Events] --> [ClickHouse (real-time)] -----------------┘
 
 ## Компоненты
-- **Хранилище:** Yandex Object Storage (S3)
-- **Оркестрация:** Apache Airflow 2.8
-- **Стриминг:** Managed Kafka 3.7
-- **Аналитика:** ClickHouse 23.3
-- **Семантический слой:** Cube.js 1.6
-- **Дашборд:** Streamlit + Plotly
+
+| Компонент | Технология | Назначение |
+|-----------|-----------|-----------|
+| Оркестрация | Airflow 2.7 | ETL/ELT пайплайны |
+| Хранилище | Yandex S3 | Data Lake (4 слоя) |
+| Стриминг | Managed Kafka 3.7 | Real-time события |
+| Аналитика | ClickHouse 23.3 | Колоночная БД |
+| Семантика | Cube.js 1.6 | API для метрик |
+| Дашборд | Streamlit | Embedded Analytics |
+| Инфраструктура | Terraform | IaC |
+| Валидация | Great Expectations | Качество данных |
+
 
 ## Быстрый старт
 
